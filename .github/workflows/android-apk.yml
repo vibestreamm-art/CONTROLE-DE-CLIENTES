@@ -22,16 +22,21 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      - name: Instalar componentes do Android SDK
+      - name: Configurar Android SDK
+        uses: android-actions/setup-android@v4
+        with:
+          packages: ""
+
+      - name: Instalar SDK 35
         run: |
-          yes | sdkmanager --licenses
-          sdkmanager "platforms;android-35" "build-tools;35.0.0"
+          sdkmanager --install "platforms;android-35" "build-tools;35.0.0"
 
       - name: Compilar APK
         working-directory: CONTROLE-DE-CLIENTES
         run: |
           rm -f local.properties
-          bash gradlew assembleDebug
+          chmod +x gradlew
+          ./gradlew assembleDebug
 
       - name: Disponibilizar APK
         uses: actions/upload-artifact@v4
